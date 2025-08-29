@@ -3,7 +3,11 @@
  * 
  * Retourne -1 si le tableau est vide.
  */
-export function getFirstNumber(): void {
+export function getFirstNumber(tab: number[]): number {
+    if (tab.length === 0) {
+        return -1;
+    }
+    return tab[0];
 }
 
 /**
@@ -12,7 +16,8 @@ export function getFirstNumber(): void {
  * @param songs Liste de chansons
  * @returns La dernière chaîne de caractères
  */
-export function getLastSongPlayed(): void {
+export function getLastSongPlayed(songs: string[]): string {
+    return songs[songs.length -1];
 }
 
 /**
@@ -22,7 +27,10 @@ export function getLastSongPlayed(): void {
  * 
  * Pour apprendre à vous servir de "reduce" : https://medium.com/free-code-camp/three-ways-to-find-the-longest-word-in-a-string-in-javascript-a2fb04c9757c#720b
  */
-export function findLongestWord(): void {
+export function findLongestWord(words: string[]): string {
+    return words.reduce(function(longest, currentWord) {
+        return currentWord.length > longest.length ? currentWord : longest;
+}, "");
 }
 
 /**
@@ -31,7 +39,8 @@ export function findLongestWord(): void {
  * @param length La taille du tableau à créer (number)
  * @param defaultValue La valeur par défaut (string)
  */
-export function fillArrayWithDefaultValue(): void {
+export function fillArrayWithDefaultValue(length: number, defaultValue: string): string[] {
+    return new Array(length).fill(defaultValue);
 }
 
 /**
@@ -44,10 +53,12 @@ export function fillArrayWithDefaultValue(): void {
  * @param arrayToSort Le tableau de chaînes de caractères à trier
  * @returns Le tableau trié
  */
-export function sortBySize(): void {
+export function sortBySize(arrayToSort: string[]): string[] {
+    return [...arrayToSort].sort((a, b) => a.length - b.length);
 }
 
 // ----------- TABLEAUX AVEC DES UNIONS -----------
+type StringOrNumber = string | number
 
 /**
  * Additionne les éléments d'un tableau qu'ils soient de type "number" ou "string".
@@ -55,9 +66,21 @@ export function sortBySize(): void {
  * @param array Utilisation d'un tableau avec types multiples : https://www.geeksforgeeks.org/defining-array-with-multiple-types-in-typescript/
  * @returns Le résultat de la somme de type "number"
  */
-export function sumStringsAndNumbers(): void {
+export function sumStringsAndNumbers(array: StringOrNumber[]): number {
+    // let sum = 0;
+    // for (let i = 0; i < array.length; i++) {
+    //     sum += Number(array[i]);
+    // }
+    // return sum;
+
+    // ou
+
+        return array.reduce((acc, element) => {
+        return acc + Number(element); // on additionne en forçant le type
+    }, 0); // 0 est la valeur initiale de l'accumulateur
 }
 
+type StringOrNull = string | undefined;
 /**
  * Traite un tableau pouvant contenir des "string" mais également des éléments "null".
  * Cette fonction est chargée de supprimer toutes les valeurs null et de garder les "srings".
@@ -67,7 +90,8 @@ export function sumStringsAndNumbers(): void {
  * @param array Un tableau pouvant contenir des "string" mais également des éléments "null"
  * @returns Tableau de chaînes de caractères résultat
  */
-export function stringsOnly(): void {
+export function stringsOnly(array: StringOrNull[]): string[] {
+    return array.filter((element: string) => typeof element === "string");
  }
 
 // ----------- TUPLES -----------
@@ -82,7 +106,15 @@ export function stringsOnly(): void {
  * @param userInfo Un tuple contenant les informations utilisateur
  * @returns Le nom utilisateur généré.
  */
-export function generateUsername(): void {
+export function generateUsername(tab: StringOrNumber[]): string {
+    const prenom = tab[0] as string; 
+    const nom = tab[1] as string; 
+    const annee = tab[2] as number;
+    
+    const prenomPart = prenom.slice(0, 2).toLowerCase();
+    const nomPart = nom.toLowerCase();
+
+    return nomPart+prenomPart+"_"+annee;
 }
 
 /**
@@ -90,6 +122,10 @@ export function generateUsername(): void {
  * TODO : à compléter avec {North, South, East, West}
  */
 export enum Direction {
+    North,
+    South,
+    East,
+    West
 }
 
 /**
@@ -111,5 +147,19 @@ export enum Direction {
  * @param direction Enum présentant une direction (North, South, East, West)
  * @returns Les nouvelles coordonnées (tuple)
  */
-export function getNextMapCoord(): void { 
+export function getNextMapCoord(coordinates: [number, number], direction: Direction): [number, number] {
+    const [x, y] = coordinates;
+
+    switch (direction) {
+        case Direction.North:
+            return [x, y +1];
+        case Direction.South:
+            return [x, y -1];
+        case Direction.East:
+            return [x +1, y];
+        case Direction.West:
+            return [x -1, y];
+        default:
+            return [x, y];
+    }
 }

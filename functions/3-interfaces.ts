@@ -6,7 +6,20 @@
  * - name
  * - address
  */
+interface Address {
+    num: number,
+    voie: string,
+    codePostal: number,
+    ville: string
+}
+interface Friend {
+    contact: Contact
+}
 interface Contact {
+    id: number,
+    name: string,
+    address: Address,
+    friends: Friend[]
 }
 
 /**
@@ -15,7 +28,8 @@ interface Contact {
  * @param contact Le contact à traiter
  * @returns l'adress du contact
  */
-export function getAddress(): void {
+export function getAddress(contact: Contact): Address {
+    return contact.address;
 }
 
 /**
@@ -24,7 +38,8 @@ export function getAddress(): void {
  * @param friends La liste de contact concernée
  * @returns Le nombre d'amis
  */
-export function howManyFriends(): void {
+export function howManyFriends(contact: Contact): Friend[] {
+    return contact.friends;
 }
 
 /**
@@ -34,13 +49,17 @@ export function howManyFriends(): void {
  * @param contacts Tableau de contacts à traiter 
  * @returns Une adresse ou "null"
  */
-export function findTheBat(): void {
+export function findTheBat(contact: Contact): Address | undefined {
+    if (contact.name === "Batman") {
+        return contact.address;
+    }
+    return undefined;
 }
 
 // ----------- CLEF OPTIONNELLES -----------
 
 /**
- * TODO définir l'interface qui représente un utilisateur.
+ * ? définir l'interface qui représente un utilisateur.
  * 
  * Documentation : https://www.typescriptlang.org/docs/handbook/interfaces.html#optional-properties
  * 
@@ -52,7 +71,13 @@ export function findTheBat(): void {
  * - email : email de l'utilisateur (optionnel)
  */
 interface User {
+    name: string,
+    verified: boolean,
+    address?: Address,
+    picture?: string,
+    email?: string
 }
+
 
 /**
  * Crée un objet "User" non vérifié à partir d'un nom.
@@ -60,7 +85,11 @@ interface User {
  * @param name Le nom de l'utilisateur
  * @returns Nouvel objet "User"
  */
-export function generateNewUser(): void {
+export function generateNewUser(name: string): User {
+    return {
+        name: name,
+        verified: false
+    }
 }
 
 /**
@@ -78,7 +107,14 @@ export function generateNewUser(): void {
  * @param email Nouvel email en chaîne de caractères
  * @returns Nouvel objet "User" avec les informations à jour
  */
-export function verifyUser(): void {
+export function verifyUser(user: User, email: string): User {
+    if (user.verified === false && email) {
+        return {
+            ...user,
+            verified: true,
+            email: email
+        }
+    }
 }
 
 
@@ -89,7 +125,13 @@ export function verifyUser(): void {
  * @param pictureUrl L'URL vers la photo de l'utilisateur
  * @returns Nouvel objet "User" avec les informations à jour
  */
-export function updateUserPhoto(): void {
+export function updateUserPhoto(user: User, pictureUrl: string): User {
+    if (user) {
+        return {
+            ...user,
+            picture: pictureUrl
+        }
+    }
 }
 
 
@@ -101,7 +143,11 @@ export function updateUserPhoto(): void {
  * @param user L'objet "User" concerné par l'opération
  * @returns La chaîne de caractères attendue
  */
-export function getUserPhoto(): void {
+export function getUserPhoto(user: User): string {
+    if (!user.picture) {
+        return user.picture = "https://place.dog/300/200"
+    }
+    return user.picture;
 }
 
 /**
@@ -116,5 +162,11 @@ export function getUserPhoto(): void {
  * @param users Le Json comprenant plusieurs objets "User"
  * @returns L'objet "User" retrouvé ou "null" si aucun utilisateur associé à la clef
  */
-export function getUser(): void {
+export function getUser(id: number, users: User[]): User | null {
+        for(const [key, value] of Object.entries(users)) {
+            if (key === id.toString()) {
+                return value;
+            }
+        }
+        return null;
 }
